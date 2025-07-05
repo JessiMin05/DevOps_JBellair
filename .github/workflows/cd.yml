@@ -48,6 +48,13 @@ jobs:
 
       - name: Dummy step (PATH refresh work-around)
         run: echo "PATH updated"
+
+      - name: Show npm global bin and contents (debug)
+        run: |
+          echo "npm bin -g: $(npm bin -g)"
+          ls -la $(npm bin -g)
+          which semver-sort || true
+          npm list -g --depth=0
         
       - name: Get latest semver tag from DockerHub
         id: latest_tag
