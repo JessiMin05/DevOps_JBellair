@@ -25,7 +25,8 @@ public final class Calculator {
                 }
                 yield num1 / num2;
             }
-            default -> throw new IllegalArgumentException("Ungültiger Operator: " + operator);
+            default -> throw new IllegalArgumentException(
+                    "Ungültiger Operator: " + operator);
         };
     }
 }
