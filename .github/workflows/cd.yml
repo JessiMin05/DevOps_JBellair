@@ -37,13 +37,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies (jq, curl) and semver-sort
+      - name: Install dependencies (jq, curl, npm, semver-sort)
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq curl
-          sudo apt install npm
+          sudo apt-get install -y jq curl npm
           npm install -g semver-sort
-          echo "$(npm bin -g)" >> $GITHUB_PATH
 
       - name: Get latest semver tag from DockerHub
         id: latest_tag
@@ -52,8 +50,8 @@ jobs:
           TAGS=$(curl -s "https://registry.hub.docker.com/v2/repositories/jessimin/devops/tags?page_size=100" | jq -r '.results[].name')
           LATEST_TAG=$(echo "$TAGS" | semver-sort | tail -n 1)
           if [ -z "$LATEST_TAG" ]; then
-          echo "No semver tags found on DockerHub for jessimin/devops."
-          exit 1
+            echo "No semver tags found on DockerHub for jessimin/devops."
+            exit 1
           fi
           echo "Latest semver tag: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
