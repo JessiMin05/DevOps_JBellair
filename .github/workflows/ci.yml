@@ -24,9 +24,10 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
     # Building with Maven
-      - name: Build with Maven
-        working-directory: .
-        run: mvn clean package
+      - name: Build with Maven and copy dependencies
+        run: |
+         mvn clean package
+         mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
     # Lint Code Base
       - name: Lint Code Base
