@@ -29,4 +29,17 @@ public final class Calculator {
                     "Ungültiger Operator: " + operator);
         };
     }
+    /**
+     * Returns the full calculation as a formatted string.
+     * @param num1 First operand
+     * @param operator Arithmetic operator (+, -, *, /)
+     * @param num2 Second operand
+     * @return The complete calculation as a string, e.g. "5.0 + 7.0 = 12.0"
+     */
+    public static String calculateAndShow(final double num1,
+                                          final char operator,
+                                          final double num2) {
+        double result = calculate(num1, operator, num2);
+        return num1 + " " + operator + " " + num2 + " = " + result;
+    }
 }

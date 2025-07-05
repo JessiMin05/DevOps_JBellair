@@ -20,8 +20,8 @@ public final class Main {
         double num2 = scanner.nextDouble();
 
         try {
-            double result = Calculator.calculate(num1, operator, num2);
-            System.out.println("Ergebnis: " + result);
+            String bill = Calculator.calculateAndShow(num1, operator, num2);
+            System.out.println("Rechnung: " + bill);
         } catch (Exception e) {
             System.out.println("Fehler: " + e.getMessage());
         }
