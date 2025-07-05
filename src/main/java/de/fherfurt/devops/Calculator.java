@@ -3,7 +3,7 @@ package de.fherfurt.devops;
 /**
  * A simple calculator for basic arithmetic operations.
  */
-public class Calculator {
+public final class Calculator {
     private Calculator() { }
     /**
      * Performs an arithmetic operation on two numbers.

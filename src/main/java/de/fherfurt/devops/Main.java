@@ -2,7 +2,8 @@ package de.fherfurt.devops;
 
 import java.util.Scanner;
 
-public class Main {
+public final class Main {
+    private Main() { }
     /**
      * Entry point for user input and calculation.
      * @param args Command-line arguments
