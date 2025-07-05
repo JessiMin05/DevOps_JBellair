@@ -48,15 +48,16 @@ jobs:
       - name: Get latest semver tag from DockerHub
         id: latest_tag
         run: |
+          export PATH="$(npm bin -g):$PATH"
           TAGS=$(curl -s "https://registry.hub.docker.com/v2/repositories/jessimin/devops/tags?page_size=100" | jq -r '.results[].name')
           LATEST_TAG=$(echo "$TAGS" | semver-sort | tail -n 1)
           if [ -z "$LATEST_TAG" ]; then
-            echo "No semver tags found on DockerHub for jessimin/devops."
-            exit 1
+          echo "No semver tags found on DockerHub for jessimin/devops."
+          exit 1
           fi
           echo "Latest semver tag: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-
+          
       - name: Check if latest Docker image exists
         run: |
           IMAGE="docker.io/jessimin/devops:${{ steps.latest_tag.outputs.tag }}"
