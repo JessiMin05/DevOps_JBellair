@@ -44,15 +44,15 @@ jobs:
           npm install -g semver-sort
 
       - name: Add npm global bin to PATH
-        run: echo "$(npm bin -g)" >> $GITHUB_PATH
+        run: echo "$(npm prefix -g)/bin" >> $GITHUB_PATH
 
       - name: Dummy step (PATH refresh work-around)
         run: echo "PATH updated"
 
       - name: Show npm global bin and contents (debug)
         run: |
-          echo "npm bin -g: $(npm bin -g)"
-          ls -la $(npm bin -g)
+          echo "npm global bin: $(npm prefix -g)/bin"
+          ls -la $(npm prefix -g)/bin
           which semver-sort || true
           npm list -g --depth=0
         
