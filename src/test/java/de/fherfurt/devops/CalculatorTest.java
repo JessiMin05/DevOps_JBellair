@@ -1,6 +1,7 @@
 package de.fherfurt.devops;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -65,7 +66,8 @@ class CalculatorTest {
     @Test
     void testDivisionByZero() {
         Exception exception = assertThrows(ArithmeticException.class, () ->
-                Calculator.calculate(NUM10, '/', 0.0d));
+                Calculator.calculate(NUM10, '/', 0.0d)
+        );
         assertEquals("Division durch 0", exception.getMessage());
     }
 
@@ -82,7 +84,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowAddition() {
-        assertEquals("2.0 + 3.0 = 5.0", Calculator.calculateAndShow(2.0, '+', 3.0));
+        assertEquals(
+                "2.0 + 3.0 = 5.0",
+                Calculator.calculateAndShow(NUM2, '+', NUM3)
+        );
     }
 
     /**
@@ -90,7 +95,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowSubtraction() {
-        assertEquals("2.0 - 3.0 = -1.0", Calculator.calculateAndShow(2.0, '-', 3.0));
+        assertEquals(
+                "2.0 - 3.0 = -1.0",
+                Calculator.calculateAndShow(NUM2, '-', NUM3)
+        );
     }
 
     /**
@@ -98,7 +106,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowMultiplication() {
-        assertEquals("2.0 * 3.0 = 6.0", Calculator.calculateAndShow(2.0, '*', 3.0));
+        assertEquals(
+                "2.0 * 3.0 = 6.0",
+                Calculator.calculateAndShow(NUM2, '*', NUM3)
+        );
     }
 
     /**
@@ -106,7 +117,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowDivision() {
-        assertEquals("3.0 / 2.0 = 1.5", Calculator.calculateAndShow(3.0, '/', 2.0));
+        assertEquals(
+                "3.0 / 2.0 = 1.5",
+                Calculator.calculateAndShow(NUM3, '/', NUM2)
+        );
     }
 
     /**
@@ -114,8 +128,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowDivisionByZero() {
-        Exception exception = assertThrows(ArithmeticException.class, () ->
-                Calculator.calculateAndShow(3.0, '/', 0.0));
+        Exception exception = assertThrows(
+                ArithmeticException.class,
+                () -> Calculator.calculateAndShow(NUM3, '/', 0.0)
+        );
         assertEquals("Division durch 0", exception.getMessage());
     }
 
@@ -124,8 +140,10 @@ class CalculatorTest {
      */
     @Test
     void testCalculateAndShowInvalidOperator() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-                Calculator.calculateAndShow(3.0, '%', 2.0));
+        Exception exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> Calculator.calculateAndShow(NUM3, '%', NUM2)
+        );
         assertEquals("Ungültiger Operator: %", exception.getMessage());
     }
 }
