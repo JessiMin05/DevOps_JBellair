@@ -37,11 +37,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies (jq, semver-sort)
+      - name: Install dependencies (jq, curl) and semver-sort
         run: |
           sudo apt-get update
           sudo apt-get install -y jq curl
           npm install -g semver-sort
+          export PATH="$(npm bin -g):$PATH"
 
       - name: Get latest semver tag from DockerHub
         id: latest_tag
