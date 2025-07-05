@@ -37,30 +37,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install dependencies (jq, curl, npm, semver-sort)
+      - name: Install dependencies (jq, curl)
         run: |
           sudo apt-get update
-          sudo apt-get install -y jq curl npm
-          npm install -g semver-sort
-
-      - name: Add npm global bin to PATH
-        run: echo "$(npm prefix -g)/bin" >> $GITHUB_PATH
-
-      - name: Dummy step (PATH refresh work-around)
-        run: echo "PATH updated"
-
-      - name: Show npm global bin and contents (debug)
-        run: |
-          echo "npm global bin: $(npm prefix -g)/bin"
-          ls -la $(npm prefix -g)/bin
-          which semver-sort || true
-          npm list -g --depth=0
+          sudo apt-get install -y jq curl
         
       - name: Get latest semver tag from DockerHub
         id: latest_tag
         run: |
           TAGS=$(curl -s "https://registry.hub.docker.com/v2/repositories/jessimin/devops/tags?page_size=100" | jq -r '.results[].name')
-          LATEST_TAG=$(echo "$TAGS" | npx semver-sort | tail -n 1)
+          LATEST_TAG=$(echo "$TAGS" | sort -V | tail -n 1)
           if [ -z "$LATEST_TAG" ]; then
           echo "No semver tags found on DockerHub for jessimin/devops."
           exit 1
