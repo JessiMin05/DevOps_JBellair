@@ -1,1 +1,71 @@
+name: CD
 
+on:
+  workflow_dispatch:
+    inputs:
+      ZAHL1:
+        description: 'Erste Zahl'
+        required: true
+        default: '8'
+      ZAHL2:
+        description: 'Zweite Zahl'
+        required: true
+        default: '4'
+      OP:
+        description: 'Operator (+, -, *, /)'
+        required: true
+        default: '*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout Repository
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Login DockerHub
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Install dependencies (jq, semver-sort)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y jq curl
+          npm install -g semver-sort
+
+      - name: Get latest semver tag from DockerHub
+        id: latest_tag
+        run: |
+          # Nutze fest den Namespace jessimin und das Image devops
+          TAGS=$(curl -s "https://registry.hub.docker.com/v2/repositories/jessimin/devops/tags?page_size=100" | jq -r '.results[].name')
+          # Sortiere semver und nimm den neuesten
+          LATEST_TAG=$(echo "$TAGS" | semver-sort | tail -n 1)
+          echo "Latest semver tag: $LATEST_TAG"
+          echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
+
+      - name: Check if latest Docker image exists
+        run: |
+          IMAGE="docker.io/jessimin/devops:${{ steps.latest_tag.outputs.tag }}"
+          if docker manifest inspect "$IMAGE" > /dev/null 2>&1; then
+            echo "Image $IMAGE exists."
+          else
+            echo "Image $IMAGE does not exist."
+            exit 1
+          fi
+
+      # Pull latest Docker image
+      - name: Pull latest Docker image
+        run: |
+          docker pull jessimin/devops:${{ steps.latest_tag.outputs.tag }}
+
+      # Deploy Application
+      - name: Deploy Application
+        run: |
+          echo "Calculator Dummy starting..."
+          echo -e "${{ github.event.inputs.ZAHL1 }}\n${{ github.event.inputs.OP }}\n${{ github.event.inputs.ZAHL2 }}" | \
+            docker run -i --rm jessimin/devops:${{ steps.latest_tag.outputs.tag }}
