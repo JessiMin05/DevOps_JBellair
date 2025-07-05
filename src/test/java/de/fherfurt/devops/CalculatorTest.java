@@ -7,7 +7,8 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for the Calculator class.
  *
- * This test class covers all basic arithmetic operations, including error cases,
+ * This test class covers all basic arithmetic operations,
+ * including error cases,
  * for both the calculate and calculateAndShow methods.
  * It is designed to achieve high code coverage.
  */
@@ -61,7 +62,8 @@ class CalculatorTest {
     }
 
     /**
-     * Tests division by zero with the calculate method and expects an ArithmeticException.
+     * Tests division by zero with the calculate method and
+     * expects an ArithmeticException.
      */
     @Test
     void testDivisionByZero() {
@@ -124,7 +126,8 @@ class CalculatorTest {
     }
 
     /**
-     * Tests the calculateAndShow method for division by zero and expects an ArithmeticException.
+     * Tests the calculateAndShow method for division by zero and
+     * expects an ArithmeticException.
      */
     @Test
     void testCalculateAndShowDivisionByZero() {
@@ -136,7 +139,8 @@ class CalculatorTest {
     }
 
     /**
-     * Tests the calculateAndShow method for an invalid operator and expects an IllegalArgumentException.
+     * Tests the calculateAndShow method for an invalid operator and
+     * expects an IllegalArgumentException.
      */
     @Test
     void testCalculateAndShowInvalidOperator() {
