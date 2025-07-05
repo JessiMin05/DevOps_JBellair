@@ -41,6 +41,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y jq curl
+          sudo apt install npm
           npm install -g semver-sort
           echo "$(npm bin -g)" >> $GITHUB_PATH
 
