@@ -60,7 +60,7 @@ jobs:
         id: latest_tag
         run: |
           TAGS=$(curl -s "https://registry.hub.docker.com/v2/repositories/jessimin/devops/tags?page_size=100" | jq -r '.results[].name')
-          LATEST_TAG=$(echo "$TAGS" | semver-sort | tail -n 1)
+          LATEST_TAG=$(echo "$TAGS" | npx semver-sort | tail -n 1)
           if [ -z "$LATEST_TAG" ]; then
           echo "No semver tags found on DockerHub for jessimin/devops."
           exit 1
