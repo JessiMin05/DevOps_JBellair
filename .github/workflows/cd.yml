@@ -46,6 +46,9 @@ jobs:
       - name: Add npm global bin to PATH
         run: echo "$(npm bin -g)" >> $GITHUB_PATH
 
+      - name: Dummy step (PATH refresh work-around)
+        run: echo "PATH updated"
+        
       - name: Get latest semver tag from DockerHub
         id: latest_tag
         run: |
