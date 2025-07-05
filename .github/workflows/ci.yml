@@ -2,6 +2,11 @@ name: Java CI with Maven
 
 on:
  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Semantic Versioning: Docker'
+        required: true
+        default: '0.0.0'
 
 jobs:
   build:
@@ -57,3 +62,14 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DevOps_JBellair -Dsonar.projectName='DevOps_JBellair'
+
+    # Docker
+      - name: Build & Push Docker image
+        run: |
+          echo "Using Docker tag: ${{ github.event.inputs.version }}"
+          mvn io.fabric8:docker-maven-plugin:0.41.0:build \
+              io.fabric8:docker-maven-plugin:0.41.0:push \
+              -Ddocker.username=${{ secrets.DOCKER_USER }} \
+              -Ddocker.password=${{ secrets.DOCKER_PASSWORD }} \
+              -Ddocker.image.tag=${{ github.event.inputs.version }} \
+              -DskipTests
