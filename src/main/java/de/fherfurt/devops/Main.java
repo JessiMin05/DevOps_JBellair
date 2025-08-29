@@ -57,7 +57,9 @@ public final class Main {
 
                 try {
                     String bill = Calculator.calculateAndShow(num1, operator, num2);
-                    System.out.println("Rechnung: " + bill);
+                    System.out.println(
+                        "Rechnung: " + bill
+                    );
                 } catch (Exception e) {
                     System.out.println("Fehler: " + e.getMessage());
                 }
