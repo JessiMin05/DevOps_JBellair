@@ -11,11 +11,15 @@ public final class Main {
     public static void main(final String[] args) {
         Scanner scanner = new Scanner(System.in);
         try {
-            System.out.println("Willkommen zu Ihrem Taschenrechner (Tippe 'exit' zum Beenden)");
+            System.out.println(
+                "Willkommen zu Ihrem Taschenrechner (Tippe 'exit' zum Beenden)"
+            );
             while (true) {
                 System.out.print("\nErste Zahl: ");
                 String input1 = scanner.next();
-                if (input1.equalsIgnoreCase("exit")) break;
+                if (input1.equalsIgnoreCase("exit")) {
+                    break;
+                }
                 double num1;
                 try {
                     num1 = Double.parseDouble(input1);
@@ -26,16 +30,23 @@ public final class Main {
 
                 System.out.print("Operator (+, -, *, /): ");
                 String opInput = scanner.next();
-                if (opInput.equalsIgnoreCase("exit")) break;
-                if (opInput.length() != 1 || "+-*/".indexOf(opInput.charAt(0)) == -1) {
-                    System.out.println("Bitte einen gültigen Operator eingeben!");
+                if (opInput.equalsIgnoreCase("exit")) {
+                    break;
+                }
+                if (opInput.length() != 1
+                        || "+-*/".indexOf(opInput.charAt(0)) == -1) {
+                    System.out.println(
+                        "Bitte einen gültigen Operator eingeben!"
+                    );
                     continue;
                 }
                 char operator = opInput.charAt(0);
 
                 System.out.print("Zweite Zahl: ");
                 String input2 = scanner.next();
-                if (input2.equalsIgnoreCase("exit")) break;
+                if (input2.equalsIgnoreCase("exit")) {
+                    break;
+                }
                 double num2;
                 try {
                     num2 = Double.parseDouble(input2);
