@@ -68,6 +68,9 @@ jobs:
             -e ZAHL2="${{ github.event.inputs.ZAHL2 }}" \
             -e OP="${{ github.event.inputs.OP }}" \
             jessimin/devops:${{ steps.latest_tag.outputs.tag }}
+          sleep 5
+          echo "==== Application Output ===="
+          docker logs calculator
 
       - name: Stop Calculator Container
         run: |
