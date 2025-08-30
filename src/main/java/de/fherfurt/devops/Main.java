@@ -33,7 +33,7 @@ public final class Main {
         try {
             LOGGER.info(
                 "Willkommen zu Ihrem Taschenrechner "
-                + "(Tippe 'exit' zum Beenden)"
+                    + "(Tippe 'exit' zum Beenden)"
             );
             boolean running = true;
             while (running) {
@@ -41,7 +41,10 @@ public final class Main {
                     envUsed = true;
                     // Check if interactive input is possible
                     if (System.console() == null) {
-                        LOGGER.info("No interactive terminal detected. Exiting after calculation.");
+                        LOGGER.info(
+                            "No interactive terminal detected. "
+                            + "Exiting after calculation."
+                        );
                         break;
                     }
                     continue;
@@ -70,8 +73,12 @@ public final class Main {
         }
         boolean valid = (!envUsed
             && (
-                (useArgs && argZahl1 != null && argZahl2 != null && argOp != null)
-                || (zahl1 != null && zahl2 != null
+                (useArgs
+                    && argZahl1 != null
+                    && argZahl2 != null
+                    && argOp != null)
+                || (zahl1 != null
+                    && zahl2 != null
                     && op != null)
             )
         );
@@ -117,7 +124,8 @@ public final class Main {
         if (opInput.equalsIgnoreCase("exit")) {
             return false;
         }
-        if (opInput.length() != 1 || "+-*/".indexOf(opInput.charAt(0)) == -1) {
+        if (opInput.length() != 1
+                || "+-*/".indexOf(opInput.charAt(0)) == -1) {
             LOGGER.warning("Bitte einen gültigen Operator eingeben!");
             return true;
         }
