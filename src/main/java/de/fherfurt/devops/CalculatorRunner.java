@@ -51,27 +51,46 @@ public final class CalculatorRunner {
             num1 = Double.parseDouble(zahl1);
             num2 = Double.parseDouble(zahl2);
         } catch (final NumberFormatException e) {
-            LOGGER.warning(
-                "Ungültige Zahl: "
-                + e.getMessage()
+            LOGGER.log(
+                java.util.logging.Level.WARNING,
+                "Ungültige Zahl: {0}",
+                e.getMessage()
             );
             return;
         }
         Double result = null;
         if (op.length() == 1) {
             try {
-                result = Calculator.calculate(num1, op.charAt(0), num2);
+                result = Calculator.calculate(
+                    num1,
+                    op.charAt(0),
+                    num2
+                );
             } catch (final Exception e) {
-                LOGGER.warning("Fehler: " + e.getMessage());
+                LOGGER.log(
+                    java.util.logging.Level.WARNING,
+                    "Fehler: {0}",
+                    e.getMessage()
+                );
             }
         } else {
-            LOGGER.warning("Ungültiger Operator: " + op);
+            LOGGER.log(
+                java.util.logging.Level.WARNING,
+                "Ungültiger Operator: {0}",
+                op
+            );
         }
         if (result != null) {
-            LOGGER.info(String.format(
-                "Rechnung: %.1f %s %.1f = %.1f",
-                num1, op, num2, result
-            ));
+            LOGGER.log(
+                java.util.logging.Level.INFO,
+                "Rechnung: {0,number,#.0} {1} {2,number,#.0} = {3,number,#.0}",
+                new Object[]{
+                    num1,
+                    op,
+                    num2,
+                    result
+                }
+            );
         }
     }
 }

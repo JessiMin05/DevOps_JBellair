@@ -85,26 +85,35 @@ class CalculatorConsoleUITest {
     ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                // Add log record to the list for test assertions
+                records.add(logRecord);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
-        try {
-            String input = NUM2 + NL + "x" + NL + EXIT + NL;
+        String input = NUM2 + NL + "x" + NL + EXIT + NL;
+        try (
             Scanner scanner = new Scanner(
                 new ByteArrayInputStream(input.getBytes())
-            );
+            )
+        ) {
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
                 r.getLevel().intValue()
                     >= Level.WARNING.intValue()
-                    && r.getMessage().contains("gültigen Operator")
+                    && r.getMessage()
+                        .contains(
+                            "gültigen Operator"
+                        )
             );
             Assertions.assertTrue(
                 found,
@@ -122,26 +131,35 @@ class CalculatorConsoleUITest {
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                // Add log record to the list for test assertions
+                records.add(logRecord);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
-        try {
-            String input = "foo" + NL + EXIT + NL;
+        String input = "foo" + NL + EXIT + NL;
+        try (
             Scanner scanner = new Scanner(
                 new ByteArrayInputStream(input.getBytes())
-            );
+            )
+        ) {
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
                 r.getLevel().intValue()
                     >= Level.WARNING.intValue()
-                    && r.getMessage().contains("gültige Zahl")
+                    && r.getMessage()
+                        .contains(
+                            "gültige Zahl"
+                        )
             );
             Assertions.assertTrue(
                 found,
@@ -159,30 +177,40 @@ class CalculatorConsoleUITest {
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                // Add log record to the list for test assertions
+                records.add(logRecord);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
-        try {
-            String input = NUM2 + NL + PLUS + NL + "foo" + NL + EXIT + NL;
+        String input = NUM2 + NL + PLUS + NL + "foo" + NL + EXIT + NL;
+        try (
             Scanner scanner = new Scanner(
                 new ByteArrayInputStream(input.getBytes())
-            );
+            )
+        ) {
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
                 r.getLevel().intValue()
-                >= java.util.logging.Level.WARNING.intValue()
-                    && r.getMessage().contains("gültige Zahl")
+                    >= java.util.logging.Level.WARNING.intValue()
+                    && r.getMessage()
+                        .contains(
+                            "gültige Zahl"
+                        )
             );
             Assertions.assertTrue(
                 found,
-                "Logger sollte Warnung für ungültige zweite Zahl enthalten"
+                "Logger sollte Warnung für ungültige zweite "
+                + "Zahl enthalten"
             );
         } finally {
             logger.removeHandler(handler);
@@ -196,30 +224,40 @@ class CalculatorConsoleUITest {
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                // Add log record to the list for test assertions
+                records.add(logRecord);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
-        try {
-            String input = NUM2 + NL + DIV + NL + NUM0 + NL + EXIT + NL;
+        String input = NUM2 + NL + DIV + NL + NUM0 + NL + EXIT + NL;
+        try (
             Scanner scanner = new Scanner(
                 new ByteArrayInputStream(input.getBytes())
-            );
+            )
+        ) {
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
                 r.getLevel().intValue()
                     >= Level.WARNING.intValue()
-                    && r.getMessage().contains("Fehler")
+                    && r.getMessage()
+                        .contains(
+                            "Fehler"
+                        )
             );
             Assertions.assertTrue(
                 found,
-                "Logger sollte Warnung für Exception beim Berechnen enthalten"
+                "Logger sollte Warnung für Exception beim "
+                + "Berechnen enthalten"
             );
         } finally {
             logger.removeHandler(handler);

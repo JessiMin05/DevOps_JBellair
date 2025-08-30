@@ -59,13 +59,18 @@ class CalculatorRunnerTest {
     ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                // Add log record to the list for test assertions
+                records.add(logRecord);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
@@ -97,9 +102,13 @@ class CalculatorRunnerTest {
                 records.add(record);
             }
             @Override
-            public void flush() { }
+            public void flush() {
+                // No resources to flush for this test handler
+            }
             @Override
-            public void close() throws SecurityException { }
+            public void close() throws SecurityException {
+                // No resources to close for this test handler
+            }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
