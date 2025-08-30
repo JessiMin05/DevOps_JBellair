@@ -64,17 +64,18 @@ public final class CalculatorConsoleUI {
         if (operator == '/' && num2 == 0.0) {
             LOGGER.warning("Division durch null ist nicht erlaubt!");
         } else {
+            String result = null;
             try {
-                String result = Calculator.calculateAndShow(
+                result = Calculator.calculateAndShow(
                     num1,
                     operator,
                     num2
                 );
-                LOGGER.info(
-                    String.format("Rechnung: %s", result)
-                );
             } catch (final Exception e) {
                 LOGGER.warning("Fehler: " + e.getMessage());
+            }
+            if (result != null) {
+                LOGGER.info(String.format("Rechnung: %s", result));
             }
         }
         return true;
