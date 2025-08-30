@@ -46,9 +46,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-results
-          path: |
-            test-results.md
-            target/surefire-reports/*.xml
+          path: target/surefire-reports/*.xml
+
+      # Test Results Reporter Dashboard
+      - name: Test Results Reporter Dashboard
+        uses: dorny/test-reporter@v2
+        with:
+          name: Java Tests Reporter
+          path: target/surefire-reports/*.xml
+          reporter: junit
 
       # Upload JAR
       - name: Upload JAR
