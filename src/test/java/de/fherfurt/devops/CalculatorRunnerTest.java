@@ -8,8 +8,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CalculatorRunnerTest {
+    /** Number of required arguments. */
     private static final int ARG_COUNT = 3;
+    /** Test operand with value 2.0. */
     private static final double NUM2 = 2.0d;
+    /** Test operand with value 3.0. */
     private static final double NUM3 = 3.0d;
 
     @Test

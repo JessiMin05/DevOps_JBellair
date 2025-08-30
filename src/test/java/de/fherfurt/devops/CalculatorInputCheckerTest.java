@@ -7,10 +7,15 @@ import org.mockito.Mockito;
 
 class CalculatorInputCheckerTest {
 
+    /** Number of required arguments. */
     private static final int ARG_COUNT = 3;
+    /** Test operand with value 1.0. */
     private static final String NUM1 = "1.0";
+    /** Test operand with value 2.0. */
     private static final String NUM2 = "2.0";
+    /** Test operand with value 3.0. */
     private static final String NUM3 = "3.0";
+    /** Test operand with value 5.0. */
     private static final String NUM5 = "5.0";
 
     @Test

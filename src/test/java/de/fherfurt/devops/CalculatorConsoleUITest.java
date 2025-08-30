@@ -11,12 +11,19 @@ import java.util.ArrayList;
 
 class CalculatorConsoleUITest {
 
+    /** Test operand with value 2.0. */
     private static final String NUM2 = "2.0";
+    /** Test operand with value 3.0. */
     private static final String NUM3 = "3.0";
+    /** Test operand with value 0.0. */
     private static final String NUM0 = "0.0";
+    /** Operator for addition. */
     private static final String PLUS = "+";
+    /** Operator for division. */
     private static final String DIV = "/";
+    /** Exit command. */
     private static final String EXIT = "exit";
+    /** Newline separator. */
     private static final String NL = "\n";
 
     @Test
