@@ -91,7 +91,6 @@ jobs:
           docker logout
 
     # Remove Artifacts
-      - name: Remove Artifacts
-        run: |
-          echo "Removing Docker artifacts"
-          docker rmi ${{ github.event.inputs.version }}
+#      - name: Remove Artifacts
+#        run: |
+#          echo "Removing artifacts"
