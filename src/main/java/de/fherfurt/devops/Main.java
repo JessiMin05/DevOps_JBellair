@@ -12,6 +12,7 @@ import java.util.logging.Logger;
  * It runs in an endless loop
  * until the user explicitly exits.
  */
+/** Logger for application output. */
 public final class Main {
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private Main() { }
@@ -53,7 +54,7 @@ public final class Main {
     }
 
     private static boolean handleEnvOrArgs(
-            String[] args, int argCount, boolean envUsed) {
+            final String[] args, final int argCount, final boolean envUsed) {
         String zahl1 = System.getenv("ZAHL1");
         String zahl2 = System.getenv("ZAHL2");
         String op = System.getenv("OP");
@@ -69,7 +70,8 @@ public final class Main {
         boolean valid = (!envUsed
             && (
                 (useArgs && argZahl1 != null && argZahl2 != null && argOp != null)
-                || (zahl1 != null && zahl2 != null && op != null)
+                || (zahl1 != null && zahl2 != null
+                    && op != null)
             )
         );
         if (!valid) {
@@ -86,13 +88,15 @@ public final class Main {
         double num2 = Double.parseDouble(usedZahl2);
         Double result = calculate(num1, num2, usedOp);
         if (result != null) {
-            LOGGER.info(String.format("Rechnung: %.1f %s %.1f = %.1f",
-                num1, usedOp, num2, result));
+            LOGGER.info(String.format(
+                "Rechnung: %.1f %s %.1f = %.1f",
+                num1, usedOp, num2, result
+            ));
         }
         return true;
     }
 
-    private static boolean handleInteractive(Scanner scanner) {
+    private static boolean handleInteractive(final Scanner scanner) {
         LOGGER.info("");
         LOGGER.info("Erste Zahl: ");
         String input1 = scanner.next();
@@ -140,7 +144,8 @@ public final class Main {
         return true;
     }
 
-    private static Double calculate(double num1, double num2, String op) {
+    private static Double calculate(
+            final double num1, final double num2, final String op) {
         switch (op) {
             case "+":
                 return num1 + num2;
