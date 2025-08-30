@@ -27,13 +27,13 @@ jobs:
 
       - name: Build and Run Calculator
         run: |
-          javac -d out src/main/java/de/fherfurt/devops/Main.java
+          javac -d out src/main/java/de/fherfurt/devops/*.java
           java -cp out de.fherfurt.devops.Main
         env: 
           ZAHL1: ${{ github.event.inputs.ZAHL1 }}
           ZAHL2: ${{ github.event.inputs.ZAHL2 }}
           OP: ${{ github.event.inputs.OP }}
-          
+
       # Login DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v3
