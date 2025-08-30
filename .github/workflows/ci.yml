@@ -6,7 +6,7 @@ on:
       version:
         description: 'Semantic Versioning: Docker'
         required: true
-        default: '0.0.0'
+        default: '1.0.0'
 
 jobs:
   build:
@@ -14,7 +14,11 @@ jobs:
 
     steps:
     # Checkout codebase
-      - uses: actions/checkout@v4
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
     # Setup Java 17
       - name: Set up JDK 17
@@ -23,6 +27,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
+
     # Building with Maven
       - name: Build with Maven and copy dependencies
         run: |
@@ -45,6 +50,15 @@ jobs:
           output: test-results.md
           show: all
 
+    # Upload Test Results
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            test-results.md
+            target/surefire-reports/*.xml
+            
     # SonarQube  
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -52,12 +66,7 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+
       - name: Build and analyze
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -74,3 +83,15 @@ jobs:
               -Ddocker.password=${{ secrets.DOCKER_PASSWORD }} \
               -Ddocker.image.tag=${{ github.event.inputs.version }} \
               -DskipTests
+
+    # Docker logging out
+      - name: Docker logout
+        run: |
+          echo "Logging out from Docker"
+          docker logout
+
+    # Remove Artifacts
+      - name: Remove Artifacts
+        run: |
+          echo "Removing Docker artifacts"
+          docker rmi ${{ github.event.inputs.version }}
