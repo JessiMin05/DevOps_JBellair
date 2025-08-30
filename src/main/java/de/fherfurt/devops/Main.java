@@ -12,8 +12,8 @@ import java.util.logging.Logger;
  * It runs in an endless loop
  * until the user explicitly exits.
  */
-/** Logger for application output. */
 public final class Main {
+    /** Logger for application output. */
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
     private Main() { }
 
