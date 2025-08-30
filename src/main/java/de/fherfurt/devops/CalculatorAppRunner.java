@@ -25,25 +25,16 @@ public final class CalculatorAppRunner {
      */
     public static void run(final String[] args) {
         final int argCount = 3;
-        // Env/Args mode: run for a fixed duration, then exit
-    final int envModeDurationMillis = 10_000; // 10 Sekunden
+        // Env/Args mode: loop endlessly (container controls lifetime)
         if (CalculatorInputChecker.hasEnvOrArgs(args, argCount)) {
-            long start = System.currentTimeMillis();
-            do {
+            while (true) {
                 CalculatorRunner.runWithEnvOrArgs(args, argCount);
                 try {
                     Thread.sleep(SLEEP_MILLIS); // 0.5 Sekunde
                 } catch (final InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-            } while (
-                System.currentTimeMillis() - start
-                    < envModeDurationMillis
-            );
-            LOGGER.info(
-                "Taschenrechner beendet (env/args mode, Zeit abgelaufen)"
-            );
-            System.exit(0);
+            }
         }
         // Interactive mode: loop until user exits
         while (true) {
@@ -56,6 +47,6 @@ public final class CalculatorAppRunner {
             }
             break;
         }
-        LOGGER.info("Taschenrechner beendet (interaktiv)");
+        LOGGER.info("Taschenrechner beendet");
     }
 }

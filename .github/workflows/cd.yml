@@ -21,18 +21,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Repository
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build and Run Calculator
-        run: |
-          javac -d out src/main/java/de/fherfurt/devops/*.java
-          java -cp out de.fherfurt.devops.Main
-        env: 
-          ZAHL1: ${{ github.event.inputs.ZAHL1 }}
-          ZAHL2: ${{ github.event.inputs.ZAHL2 }}
-          OP: ${{ github.event.inputs.OP }}
 
       # Login DockerHub
       - name: Login to DockerHub
@@ -41,11 +29,7 @@ jobs:
           username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Install dependencies (jq, curl)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y jq curl
-        
+      # Get latest semver tag from DockerHub
       - name: Get latest semver tag from DockerHub
         id: latest_tag
         run: |
@@ -57,7 +41,8 @@ jobs:
           fi
           echo "Latest semver tag: $LATEST_TAG"
           echo "tag=$LATEST_TAG" >> $GITHUB_OUTPUT
-          
+
+      # Check if latest Docker image exists
       - name: Check if latest Docker image exists
         run: |
           IMAGE="docker.io/jessimin/devops:${{ steps.latest_tag.outputs.tag }}"
@@ -73,9 +58,18 @@ jobs:
         run: |
           docker pull jessimin/devops:${{ steps.latest_tag.outputs.tag }}
 
-      # Deploy Application
+          
+      # Deploy Application (Docker only, manual stop)
       - name: Deploy Application
         run: |
           echo "Calculator Dummy starting..."
-          echo -e "${{ github.event.inputs.ZAHL1 }}\n${{ github.event.inputs.OP }}\n${{ github.event.inputs.ZAHL2 }}" | \
-            docker run -i --rm jessimin/devops:${{ steps.latest_tag.outputs.tag }}
+          docker run -d --name calculator \
+            -e ZAHL1="${{ github.event.inputs.ZAHL1 }}" \
+            -e ZAHL2="${{ github.event.inputs.ZAHL2 }}" \
+            -e OP="${{ github.event.inputs.OP }}" \
+            jessimin/devops:${{ steps.latest_tag.outputs.tag }}
+
+      - name: Stop Calculator Container
+        run: |
+          docker stop calculator
+          docker rm calculator
