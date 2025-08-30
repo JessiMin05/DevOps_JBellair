@@ -68,7 +68,14 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: compiled-classes
-          path: target/classes/      
+          path: target/classes/  
+
+      # Upload dependencies
+      - name: Upload dependencies
+        uses: actions/upload-artifact@v4
+        with:
+          name: maven-dependency
+          path: target/dependency/   
 
   Analysis:
     needs: BuildWithTesting
@@ -133,12 +140,20 @@ jobs:
         with:
           name: app-jar
           path: target/
+
       # Download compiled classes
       - name: Download compiled classes
         uses: actions/download-artifact@v4
         with:
           name: compiled-classes
           path: target/classes/
+
+      # Download dependencies
+      - name: Download dependencies
+        uses: actions/download-artifact@v4
+        with:
+          name: maven-dependency
+          path: target/dependency/
 
       # Docker
       - name: Build & Push Docker image
