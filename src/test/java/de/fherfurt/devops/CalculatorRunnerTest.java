@@ -20,7 +20,8 @@ class CalculatorRunnerTest {
         // Should not throw and should log result
         Assertions.assertDoesNotThrow(() ->
             CalculatorRunner.runWithEnvOrArgs(
-                new String[]{Double.toString(NUM2), "+", Double.toString(NUM3)}, ARG_COUNT)
+                new String[]{Double.toString(NUM2), "+", Double.toString(NUM3)},
+                ARG_COUNT)
         );
     }
 
@@ -28,7 +29,8 @@ class CalculatorRunnerTest {
     void runWithEnvOrArgsInvalidOperator() {
         Assertions.assertDoesNotThrow(() ->
             CalculatorRunner.runWithEnvOrArgs(
-                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)}, ARG_COUNT)
+                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)},
+                ARG_COUNT)
         );
     }
 
@@ -36,21 +38,25 @@ class CalculatorRunnerTest {
     void runWithEnvOrArgsInvalidNumber() {
         Assertions.assertDoesNotThrow(() ->
             CalculatorRunner.runWithEnvOrArgs(
-                new String[]{"foo", "+", Double.toString(NUM3)}, ARG_COUNT)
+                new String[]{"foo", "+", Double.toString(NUM3)},
+                ARG_COUNT)
         );
     }
 
     @Test
     void runWithEnvOrArgsMissingArgs() {
         Assertions.assertDoesNotThrow(() ->
-            CalculatorRunner.runWithEnvOrArgs(new String[]{}, ARG_COUNT)
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{}, ARG_COUNT)
         );
     }
 
     @Test
     void runWithEnvOrArgsInvalidOperatorLogsWarning() {
-        Logger logger = Logger.getLogger(CalculatorRunner.class.getName());
-        ArrayList<LogRecord> records = new ArrayList<>();
+        Logger logger = Logger.getLogger(
+            CalculatorRunner.class.getName()
+        );
+    ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
             public void publish(final LogRecord record) {
@@ -65,10 +71,12 @@ class CalculatorRunnerTest {
         logger.setUseParentHandlers(false);
         try {
             CalculatorRunner.runWithEnvOrArgs(
-                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)}, ARG_COUNT);
+                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)},
+                ARG_COUNT);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("Ungültiger Operator")
+                r.getLevel().intValue()
+                    >= java.util.logging.Level.WARNING.intValue()
+                    && r.getMessage().contains("Ungültiger Operator")
             );
             Assertions.assertTrue(
                 found,
@@ -97,14 +105,17 @@ class CalculatorRunnerTest {
         logger.setUseParentHandlers(false);
         try {
             CalculatorRunner.runWithEnvOrArgs(
-                new String[]{Double.toString(NUM2), "++", Double.toString(NUM3)}, ARG_COUNT);
+                new String[]{Double.toString(NUM2), "++", Double
+                .toString(NUM3)}, ARG_COUNT);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("Ungültiger Operator")
+                r.getLevel().intValue()
+                    >= java.util.logging.Level.WARNING.intValue()
+                    && r.getMessage().contains("Ungültiger Operator")
             );
             Assertions.assertTrue(
                 found,
-                "Logger sollte Warnung für mehrstelligen ungültigen Operator enthalten"
+                "Logger sollte Warnung für mehrstelligen "
+                    + "ungültigen Operator enthalten"
             );
         } finally {
             logger.removeHandler(handler);

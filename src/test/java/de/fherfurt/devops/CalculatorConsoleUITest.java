@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
+import java.util.logging.Level;
 import java.util.ArrayList;
 
 class CalculatorConsoleUITest {
@@ -68,7 +69,8 @@ class CalculatorConsoleUITest {
 
     @Test
     void runInteractiveCalculateThrowsException() {
-        // Division durch 0 löst Exception in Calculator aus, Fehlerpfad wird getestet
+        // Division durch 0 löst Exception in Calculator aus,
+        //Fehlerpfad wird getestet
         String input = NUM2 + NL + DIV + NL + NUM0 + NL + EXIT + NL;
         Scanner scanner = new Scanner(
             new ByteArrayInputStream(input.getBytes()));
@@ -78,8 +80,9 @@ class CalculatorConsoleUITest {
     @Test
     void runInteractiveInvalidOperatorLogsWarning() {
         Logger logger = Logger.getLogger(
-            CalculatorConsoleUI.class.getName());
-        ArrayList<LogRecord> records = new ArrayList<>();
+            CalculatorConsoleUI.class.getName()
+        );
+    ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
             public void publish(final LogRecord record) {
@@ -95,11 +98,13 @@ class CalculatorConsoleUITest {
         try {
             String input = NUM2 + NL + "x" + NL + EXIT + NL;
             Scanner scanner = new Scanner(
-                new ByteArrayInputStream(input.getBytes()));
+                new ByteArrayInputStream(input.getBytes())
+            );
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("gültigen Operator")
+                r.getLevel().intValue()
+                    >= Level.WARNING.intValue()
+                    && r.getMessage().contains("gültigen Operator")
             );
             Assertions.assertTrue(
                 found,
@@ -130,11 +135,13 @@ class CalculatorConsoleUITest {
         try {
             String input = "foo" + NL + EXIT + NL;
             Scanner scanner = new Scanner(
-                new ByteArrayInputStream(input.getBytes()));
+                new ByteArrayInputStream(input.getBytes())
+            );
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("gültige Zahl")
+                r.getLevel().intValue()
+                    >= Level.WARNING.intValue()
+                    && r.getMessage().contains("gültige Zahl")
             );
             Assertions.assertTrue(
                 found,
@@ -165,11 +172,13 @@ class CalculatorConsoleUITest {
         try {
             String input = NUM2 + NL + PLUS + NL + "foo" + NL + EXIT + NL;
             Scanner scanner = new Scanner(
-                new ByteArrayInputStream(input.getBytes()));
+                new ByteArrayInputStream(input.getBytes())
+            );
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("gültige Zahl")
+                r.getLevel().intValue()
+                >= java.util.logging.Level.WARNING.intValue()
+                    && r.getMessage().contains("gültige Zahl")
             );
             Assertions.assertTrue(
                 found,
@@ -200,11 +209,13 @@ class CalculatorConsoleUITest {
         try {
             String input = NUM2 + NL + DIV + NL + NUM0 + NL + EXIT + NL;
             Scanner scanner = new Scanner(
-                new ByteArrayInputStream(input.getBytes()));
+                new ByteArrayInputStream(input.getBytes())
+            );
             CalculatorConsoleUI.runInteractive(scanner);
             boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
-                && r.getMessage().contains("Fehler")
+                r.getLevel().intValue()
+                    >= Level.WARNING.intValue()
+                    && r.getMessage().contains("Fehler")
             );
             Assertions.assertTrue(
                 found,
