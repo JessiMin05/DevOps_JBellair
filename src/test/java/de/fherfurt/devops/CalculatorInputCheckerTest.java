@@ -1,75 +1,82 @@
 package de.fherfurt.devops;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import org.mockito.Mockito;
 
 class CalculatorInputCheckerTest {
+
+    private static final int ARG_COUNT = 3;
+    private static final String NUM1 = "1.0";
+    private static final String NUM2 = "2.0";
+    private static final String NUM3 = "3.0";
+    private static final String NUM5 = "5.0";
+
     @Test
-    void testHasEnvOrArgs_withArgs() {
-        String[] args = {"1.0", "+", "2.0"};
-        assertTrue(CalculatorInputChecker.hasEnvOrArgs(args, 3));
+    void hasEnvOrArgsWithArgs() {
+    String[] args = {NUM1, "+", NUM2};
+    Assertions.assertTrue(CalculatorInputChecker.hasEnvOrArgs(args, ARG_COUNT));
     }
 
     @Test
-    void testHasEnvOrArgs_withNullArgs() {
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(null, 3));
+    void hasEnvOrArgsWithNullArgs() {
+        Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(null, ARG_COUNT));
     }
 
     @Test
-    void testHasEnvOrArgs_withEmptyArgs() {
+    void hasEnvOrArgsWithEmptyArgs() {
         String[] args = {};
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, 3));
+        Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, ARG_COUNT));
     }
 
     @Test
-    void testHasEnvOrArgs_withPartialArgs() {
-        String[] args = {"1.0", "+"};
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, 3));
+    void hasEnvOrArgsWithPartialArgs() {
+    String[] args = {NUM1, "+"};
+    Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, ARG_COUNT));
     }
 
     @Test
-    void testHasEnvOrArgs_withTooManyArgs() {
-        String[] args = {"1.0", "+", "2.0", "EXTRA"};
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, 3));
+    void hasEnvOrArgsWithTooManyArgs() {
+    String[] args = {NUM1, "+", NUM2, "EXTRA"};
+    Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(args, ARG_COUNT));
     }
 
     @Test
-    void testHasEnvOrArgs_withEnvVars_allPresent() {
+    void hasEnvOrArgsWithEnvVarsAllPresent() {
         CalculatorInputChecker.EnvProvider mockEnv = Mockito.mock(CalculatorInputChecker.EnvProvider.class);
-        Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn("5.0");
-        Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn("3.0");
-        Mockito.when(mockEnv.getenv("OP")).thenReturn("+");
-        assertTrue(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, 3, mockEnv));
+    Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn(NUM5);
+    Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn(NUM3);
+    Mockito.when(mockEnv.getenv("OP")).thenReturn("+");
+        Assertions.assertTrue(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, ARG_COUNT, mockEnv));
     }
 
     @Test
-    void testHasEnvOrArgs_withEnvVars_missingOne() {
+    void hasEnvOrArgsWithEnvVarsMissingOne() {
         CalculatorInputChecker.EnvProvider mockEnv = Mockito.mock(CalculatorInputChecker.EnvProvider.class);
-        Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn("5.0");
+    Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn(NUM5);
         Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn(null);
         Mockito.when(mockEnv.getenv("OP")).thenReturn("+");
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, 3, mockEnv));
+        Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, ARG_COUNT, mockEnv));
     }
 
     @Test
-    void testHasEnvOrArgs_withEnvVars_allMissing() {
+    void hasEnvOrArgsWithEnvVarsAllMissing() {
         CalculatorInputChecker.EnvProvider mockEnv = Mockito.mock(CalculatorInputChecker.EnvProvider.class);
         Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn(null);
         Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn(null);
         Mockito.when(mockEnv.getenv("OP")).thenReturn(null);
-        assertFalse(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, 3, mockEnv));
+        Assertions.assertFalse(CalculatorInputChecker.hasEnvOrArgs(new String[]{}, ARG_COUNT, mockEnv));
     }
 
     @Test
-    void testHasEnvOrArgs_withArgsAndEnvVars_bothPresent() {
-        String[] args = {"1.0", "+", "2.0"};
-        CalculatorInputChecker.EnvProvider mockEnv = Mockito.mock(CalculatorInputChecker.EnvProvider.class);
-        Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn("5.0");
-        Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn("3.0");
-        Mockito.when(mockEnv.getenv("OP")).thenReturn("+");
-        // Should return true if either is present
-        assertTrue(CalculatorInputChecker.hasEnvOrArgs(args, 3, mockEnv));
+    void hasEnvOrArgsWithArgsAndEnvVarsBothPresent() {
+    String[] args = {NUM1, "+", NUM2};
+    CalculatorInputChecker.EnvProvider mockEnv = Mockito.mock(CalculatorInputChecker.EnvProvider.class);
+    Mockito.when(mockEnv.getenv("ZAHL1")).thenReturn(NUM5);
+    Mockito.when(mockEnv.getenv("ZAHL2")).thenReturn(NUM3);
+    Mockito.when(mockEnv.getenv("OP")).thenReturn("+");
+    // Should return true if either is present
+    Assertions.assertTrue(CalculatorInputChecker.hasEnvOrArgs(args, ARG_COUNT, mockEnv));
     }
 }

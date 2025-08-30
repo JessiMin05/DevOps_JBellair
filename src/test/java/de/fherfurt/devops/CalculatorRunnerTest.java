@@ -4,77 +4,107 @@ import java.util.logging.Logger;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.ArrayList;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class CalculatorRunnerTest {
+    private static final int ARG_COUNT = 3;
+    private static final double NUM2 = 2.0d;
+    private static final double NUM3 = 3.0d;
+
     @Test
-    void testRunWithEnvOrArgs_validArgs() {
+    void runWithEnvOrArgsValidArgs() {
         // Should not throw and should log result
-        assertDoesNotThrow(() ->
-            CalculatorRunner.runWithEnvOrArgs(new String[]{"2.0", "+", "3.0"}, 3)
+        Assertions.assertDoesNotThrow(() ->
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{Double.toString(NUM2), "+", Double.toString(NUM3)}, ARG_COUNT)
         );
     }
 
     @Test
-    void testRunWithEnvOrArgs_invalidOperator() {
-        assertDoesNotThrow(() ->
-            CalculatorRunner.runWithEnvOrArgs(new String[]{"2.0", "x", "3.0"}, 3)
+    void runWithEnvOrArgsInvalidOperator() {
+        Assertions.assertDoesNotThrow(() ->
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)}, ARG_COUNT)
         );
     }
 
     @Test
-    void testRunWithEnvOrArgs_invalidNumber() {
-        assertDoesNotThrow(() ->
-            CalculatorRunner.runWithEnvOrArgs(new String[]{"foo", "+", "3.0"}, 3)
+    void runWithEnvOrArgsInvalidNumber() {
+        Assertions.assertDoesNotThrow(() ->
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{"foo", "+", Double.toString(NUM3)}, ARG_COUNT)
         );
     }
 
     @Test
-    void testRunWithEnvOrArgs_missingArgs() {
-        assertDoesNotThrow(() ->
-            CalculatorRunner.runWithEnvOrArgs(new String[]{}, 3)
+    void runWithEnvOrArgsMissingArgs() {
+        Assertions.assertDoesNotThrow(() ->
+            CalculatorRunner.runWithEnvOrArgs(new String[]{}, ARG_COUNT)
         );
     }
-    
+
     @Test
-    void testRunWithEnvOrArgs_invalidOperator_logsWarning() {
+    void runWithEnvOrArgsInvalidOperatorLogsWarning() {
         Logger logger = Logger.getLogger(CalculatorRunner.class.getName());
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
-            @Override public void publish(LogRecord record) { records.add(record); }
-            @Override public void flush() {}
-            @Override public void close() throws SecurityException {}
+            @Override
+            public void publish(final LogRecord record) {
+                records.add(record);
+            }
+            @Override
+            public void flush() { }
+            @Override
+            public void close() throws SecurityException { }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
         try {
-            CalculatorRunner.runWithEnvOrArgs(new String[]{"2.0", "x", "3.0"}, 3);
-            boolean found = records.stream().anyMatch(r -> r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue() && r.getMessage().contains("Ungültiger Operator"));
-            assertTrue(found, "Logger sollte Warnung für ungültigen Operator enthalten");
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)}, ARG_COUNT);
+            boolean found = records.stream().anyMatch(r ->
+                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
+                && r.getMessage().contains("Ungültiger Operator")
+            );
+            Assertions.assertTrue(
+                found,
+                "Logger sollte Warnung für ungültigen Operator enthalten"
+            );
         } finally {
             logger.removeHandler(handler);
         }
     }
 
     @Test
-    void testRunWithEnvOrArgs_multiCharOperator_logsWarning() {
+    void runWithEnvOrArgsMultiCharOperatorLogsWarning() {
         Logger logger = Logger.getLogger(CalculatorRunner.class.getName());
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
-            @Override public void publish(LogRecord record) { records.add(record); }
-            @Override public void flush() {}
-            @Override public void close() throws SecurityException {}
+            @Override
+            public void publish(final LogRecord record) {
+                records.add(record);
+            }
+            @Override
+            public void flush() { }
+            @Override
+            public void close() throws SecurityException { }
         };
         logger.addHandler(handler);
         logger.setUseParentHandlers(false);
         try {
-            CalculatorRunner.runWithEnvOrArgs(new String[]{"2.0", "++", "3.0"}, 3);
-            boolean found = records.stream().anyMatch(r -> r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue() && r.getMessage().contains("Ungültiger Operator"));
-            assertTrue(found, "Logger sollte Warnung für mehrstelligen ungültigen Operator enthalten");
+            CalculatorRunner.runWithEnvOrArgs(
+                new String[]{Double.toString(NUM2), "++", Double.toString(NUM3)}, ARG_COUNT);
+            boolean found = records.stream().anyMatch(r ->
+                r.getLevel().intValue() >= java.util.logging.Level.WARNING.intValue()
+                && r.getMessage().contains("Ungültiger Operator")
+            );
+            Assertions.assertTrue(
+                found,
+                "Logger sollte Warnung für mehrstelligen ungültigen Operator enthalten"
+            );
         } finally {
             logger.removeHandler(handler);
         }
     }
-
 }
