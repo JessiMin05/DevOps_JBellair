@@ -59,7 +59,7 @@ jobs:
           docker pull jessimin/devops:${{ steps.latest_tag.outputs.tag }}
 
           
-      # Deploy Application (Docker only, manual stop)
+      # Deploy Application
       - name: Deploy Application
         run: |
           echo "Calculator Dummy starting..."
@@ -76,3 +76,10 @@ jobs:
         run: |
           docker stop calculator
           docker rm calculator
+          docker rmi jessimin/devops:${{ steps.latest_tag.outputs.tag }}
+
+      # Docker logout
+      - name: Docker logout
+        run: |
+          echo "Logging out from Docker"
+          docker logout

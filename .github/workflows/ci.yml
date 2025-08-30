@@ -13,14 +13,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # Checkout codebase
+      # Checkout codebase
       - name: Checkout codebase
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-    # Setup Java 17
+      # Setup Java 17
       - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
@@ -28,13 +28,13 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-    # Building with Maven
+      # Building with Maven
       - name: Build with Maven and copy dependencies
         run: |
          mvn clean package
          mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
-    # Lint Code Base
+      # Lint Code Base
       - name: Lint Code Base
         uses: github/super-linter@v4
         env:
@@ -42,7 +42,7 @@ jobs:
           DEFAULT_BRANCH: "main"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    # Testing via JaCoCo/Surefire
+      # Testing via JaCoCo/Surefire
       - name: Junit Test Dashboard
         uses: janisz/action@v2
         with:
@@ -50,7 +50,7 @@ jobs:
           output: test-results.md
           show: all
 
-    # Upload Test Results
+      # Upload Test Results
       - name: Upload Test Results
         uses: actions/upload-artifact@v4
         with:
@@ -59,7 +59,7 @@ jobs:
             test-results.md
             target/surefire-reports/*.xml
             
-    # SonarQube  
+      # SonarQube  
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -73,7 +73,7 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DevOps_JBellair -Dsonar.projectName='DevOps_JBellair'
 
-    # Docker
+      # Docker
       - name: Build & Push Docker image
         run: |
           echo "Using Docker tag: ${{ github.event.inputs.version }}"
@@ -84,13 +84,13 @@ jobs:
               -Ddocker.image.tag=${{ github.event.inputs.version }} \
               -DskipTests
 
-    # Docker logging out
+      # Docker logout
       - name: Docker logout
         run: |
           echo "Logging out from Docker"
           docker logout
 
-    # Remove Artifacts
+      # Remove Artifacts
 #      - name: Remove Artifacts
 #        run: |
 #          echo "Removing artifacts"
