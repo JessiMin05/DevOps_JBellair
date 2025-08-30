@@ -37,6 +37,11 @@ public final class Main {
             while (running) {
                 if (handleEnvOrArgs(args, argCount, envUsed)) {
                     envUsed = true;
+                    // Check if interactive input is possible
+                    if (System.console() == null) {
+                        LOGGER.info("No interactive terminal detected. Exiting after calculation.");
+                        break;
+                    }
                     continue;
                 }
                 running = handleInteractive(scanner);
