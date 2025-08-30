@@ -48,9 +48,15 @@ public final class Main {
                 }
 
         if (!envUsed
-            && ((useArgs && argZahl1 != null && argZahl2 != null && argOp != null)
-            || (zahl1 != null && zahl2 != null
-                && op != null))) {
+            && (
+                (useArgs
+                    && argZahl1 != null
+                    && argZahl2 != null
+                    && argOp != null)
+                || (zahl1 != null
+                    && zahl2 != null
+                    && op != null)
+            )) {
                     String usedZahl1 = useArgs ? argZahl1 : zahl1;
                     String usedZahl2 = useArgs ? argZahl2 : zahl2;
                     String usedOp = useArgs ? argOp : op;
