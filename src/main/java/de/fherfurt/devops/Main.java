@@ -32,7 +32,8 @@ public final class Main {
         boolean envUsed = false;
         try {
             LOGGER.info(
-                "Willkommen zu Ihrem Taschenrechner (Tippe 'exit' zum Beenden)"
+                "Willkommen zu Ihrem Taschenrechner "
+                + "(Tippe 'exit' zum Beenden)"
             );
             boolean running = true;
             while (running) {
