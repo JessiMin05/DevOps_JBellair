@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 public final class Main {
     /** Logger for application output. */
     private static final Logger LOGGER = Logger.getLogger(Main.class.getName());
+    /** Sleep duration in ms for automated mode. */
+    private static final int SLEEP_MILLIS = 1000;
     private Main() { }
 
     /**
@@ -27,85 +29,107 @@ public final class Main {
      *             they are used as first number, operator, and second number.
      */
     public static void main(final String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        final int argCount = 3;
-        boolean envUsed = false;
-        try {
-            LOGGER.info(
-                "Willkommen zu Ihrem Taschenrechner "
-                    + "(Tippe 'exit' zum Beenden)"
-            );
-            boolean running = true;
-            while (running) {
-                if (handleEnvOrArgs(args, argCount, envUsed)) {
-                    envUsed = true;
-                    // Check if interactive input is possible
-                    if (System.console() == null) {
-                        LOGGER.info(
-                            "No interactive terminal detected. "
-                            + "Exiting after calculation."
-                        );
-                        break;
-                    }
-                    continue;
+    final int argCount = 3;
+        LOGGER.info(
+            "Willkommen zu Ihrem Taschenrechner "
+                + "(Tippe 'exit' zum Beenden)"
+        );
+        // Endlosschleife für Automatik-Modus
+        while (true) {
+            if (hasEnvOrArgs(args, argCount)) {
+                handleEnvOrArgs(args, argCount);
+                // Kurze Pause, damit die Schleife nicht zu schnell läuft
+                try {
+                    Thread.sleep(SLEEP_MILLIS);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
-                running = handleInteractive(scanner);
+                continue;
             }
-            LOGGER.info("Taschenrechner beendet");
-        } finally {
-            scanner.close();
+            // Interaktiver Modus, wenn keine Variablen/Argumente gesetzt
+            try (Scanner scanner = new Scanner(System.in)) {
+                while (handleInteractive(scanner)) {
+                    // läuft bis exit
+                    LOGGER.fine(
+                        "Block intentionally left empty for Checkstyle."
+                    );
+                }
+            }
+            break;
         }
+        LOGGER.info("Taschenrechner beendet");
     }
 
-    private static boolean handleEnvOrArgs(
-            final String[] args, final int argCount, final boolean envUsed) {
-        String zahl1 = System.getenv("ZAHL1");
-        String zahl2 = System.getenv("ZAHL2");
-        String op = System.getenv("OP");
-        boolean useArgs = (!envUsed && args.length == argCount);
-        String argZahl1 = null;
-        String argOp = null;
-        String argZahl2 = null;
-        if (useArgs) {
-            argZahl1 = args[0];
-            argOp = args[1];
-            argZahl2 = args[2];
+    /**
+     * Prüft, ob Umgebungsvariablen oder Kommandozeilenargumente gesetzt sind.
+     *
+     * @param args Kommandozeilenargumente
+     * @param argCount Erwartete Anzahl Argumente
+     * @return true, wenn Umgebungsvariablen oder Argumente gesetzt sind
+     */
+    private static boolean hasEnvOrArgs(
+        final String[] args, final int argCount
+        ) {
+        boolean hasArgs = args != null
+            && args.length == argCount;
+        boolean hasEnv = System.getenv("ZAHL1") != null
+            && System.getenv("ZAHL2") != null
+            && System.getenv("OP") != null;
+        return hasArgs || hasEnv;
+    }
+
+    /**
+     * Führt die Berechnung mit Umgebungsvariablen
+     * oder Kommandozeilenargumenten aus.
+     *
+     * @param args Kommandozeilenargumente
+     * @param argCount Erwartete Anzahl Argumente
+     */
+    private static void handleEnvOrArgs(
+        final String[] args, final int argCount
+        ) {
+        String zahl1;
+        String zahl2;
+        String op;
+        if (args != null && args.length == argCount) {
+            zahl1 = args[0];
+            op = args[1];
+            zahl2 = args[2];
+        } else {
+            zahl1 = System.getenv("ZAHL1");
+            zahl2 = System.getenv("ZAHL2");
+            op = System.getenv("OP");
         }
-        boolean valid = (!envUsed
-            && (
-                (useArgs
-                    && argZahl1 != null
-                    && argZahl2 != null
-                    && argOp != null)
-                || (zahl1 != null
-                    && zahl2 != null
-                    && op != null)
-            )
-        );
-        if (!valid) {
-            return false;
+        if (zahl1 == null || zahl2 == null || op == null) {
+            LOGGER.warning(
+                "Fehlende Werte für die "
+                + "Berechnung."
+            );
+            return;
         }
-        String usedZahl1 = useArgs ? argZahl1 : zahl1;
-        String usedZahl2 = useArgs ? argZahl2 : zahl2;
-        String usedOp = useArgs ? argOp : op;
-        if (usedOp == null) {
-            LOGGER.warning("Operator is null!");
-            return false;
+        double num1;
+        double num2;
+        try {
+            num1 = Double.parseDouble(zahl1);
+            num2 = Double.parseDouble(zahl2);
+        } catch (NumberFormatException e) {
+            LOGGER.warning(
+                "Ungültige Zahl: "
+                + e.getMessage()
+            );
+            return;
         }
-        double num1 = Double.parseDouble(usedZahl1);
-        double num2 = Double.parseDouble(usedZahl2);
-        Double result = calculate(num1, num2, usedOp);
+        Double result = calculate(num1, num2, op);
         if (result != null) {
             LOGGER.info(String.format(
                 "Rechnung: %.1f %s %.1f = %.1f",
-                num1, usedOp, num2, result
+                num1, op, num2, result
             ));
         }
-        return true;
     }
 
     private static boolean handleInteractive(final Scanner scanner) {
-        LOGGER.info("");
+    LOGGER.info(""); // Leere Zeile für bessere Lesbarkeit
         LOGGER.info("Erste Zahl: ");
         String input1 = scanner.next();
         if (input1.equalsIgnoreCase("exit")) {
@@ -166,7 +190,9 @@ public final class Main {
                 return num2 != 0 ? num1 / num2 : null;
             default:
                 LOGGER.warning("Unbekannter Operator!");
-                return null;
+                // Block muss laut Checkstyle nicht leer sein
+                break;
         }
+        return null;
     }
 }
