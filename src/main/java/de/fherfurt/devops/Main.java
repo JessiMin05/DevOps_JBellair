@@ -25,7 +25,7 @@ public final class Main {
      */
     public static void main(final String[] args) {
     Scanner scanner = new Scanner(System.in);
-    final int ARG_COUNT = 3;
+    final int argCount = 3;
     boolean envUsed = false;
         try {
             System.out.println(
@@ -37,7 +37,7 @@ public final class Main {
                 String op = System.getenv("OP");
 
 
-                boolean useArgs = (!envUsed && args.length == ARG_COUNT);
+                boolean useArgs = (!envUsed && args.length == argCount);
                 String argZahl1 = null;
                 String argOp = null;
                 String argZahl2 = null;
@@ -47,9 +47,9 @@ public final class Main {
                     argZahl2 = args[2];
                 }
 
-                if (!envUsed && (
-                        (useArgs && argZahl1 != null && argZahl2 != null && argOp != null) ||
-                        (zahl1 != null && zahl2 != null && op != null))) {
+        if (!envUsed
+            && ((useArgs && argZahl1 != null && argZahl2 != null && argOp != null)
+            || (zahl1 != null && zahl2 != null && op != null))) {
                     String usedZahl1 = useArgs ? argZahl1 : zahl1;
                     String usedZahl2 = useArgs ? argZahl2 : zahl2;
                     String usedOp = useArgs ? argOp : op;
