@@ -9,9 +9,8 @@ on:
         default: '1.0.0'
 
 jobs:
-  build:
+  BuildWithTesting:
     runs-on: ubuntu-latest
-
     steps:
       # Checkout codebase
       - name: Checkout codebase
@@ -34,14 +33,6 @@ jobs:
          mvn clean package
          mvn dependency:copy-dependencies -DoutputDirectory=target/dependency
 
-      # Lint Code Base
-      - name: Lint Code Base
-        uses: github/super-linter@v4
-        env:
-          VALIDATE_JAVA: true
-          DEFAULT_BRANCH: "main"
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       # Testing via JaCoCo/Surefire
       - name: Junit Test Dashboard
         uses: janisz/action@v2
@@ -58,7 +49,52 @@ jobs:
           path: |
             test-results.md
             target/surefire-reports/*.xml
-            
+
+      # Upload JAR
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+
+      # Upload compiled classes
+      - name: Upload compiled classes
+        uses: actions/upload-artifact@v4
+        with:
+          name: compiled-classes
+          path: target/classes/      
+
+  Analysis:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout codebase
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Download JAR
+      - name: Download JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target/
+
+      # Download compiled classes
+      - name: Download compiled classes
+        uses: actions/download-artifact@v4
+        with:
+          name: compiled-classes
+          path: target/classes/
+      # Lint Code Base
+      - name: Lint Code Base
+        uses: github/super-linter@v4
+        env:
+          VALIDATE_JAVA: true
+          DEFAULT_BRANCH: "main"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # SonarQube  
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -73,6 +109,15 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DevOps_JBellair -Dsonar.projectName='DevOps_JBellair'
 
+  Docker:
+    runs-on: ubuntu-latest
+    steps:
+      # Download JAR
+      - name: Download JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target/
       # Docker
       - name: Build & Push Docker image
         run: |
@@ -84,6 +129,9 @@ jobs:
               -Ddocker.image.tag=${{ github.event.inputs.version }} \
               -DskipTests
 
+  CleanUp:
+    runs-on: ubuntu-latest
+    steps:
       # Docker logout
       - name: Docker logout
         run: |
@@ -91,6 +139,8 @@ jobs:
           docker logout
 
       # Remove Artifacts
-#      - name: Remove Artifacts
-#        run: |
-#          echo "Removing artifacts"
+      - name: Remove JAR and compiled classes
+        run: |
+          echo "Removing JAR and compiled classes"
+          rm -f target/*.jar
+          rm -rf target/classes/
