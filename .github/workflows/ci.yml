@@ -54,7 +54,7 @@ jobs:
         with:
           name: Java Tests Reporter
           path: target/surefire-reports/*.xml
-          reporter: junit
+          reporter: java-junit
 
       # Upload JAR
       - name: Upload JAR
