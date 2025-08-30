@@ -2,6 +2,7 @@ package de.fherfurt.devops;
 
 import java.util.Scanner;
 import java.util.logging.Logger;
+import java.util.logging.Level;
 
 /**
  * Handles the user interaction for the calculator (interactive mode).
@@ -75,7 +76,9 @@ public final class CalculatorConsoleUI {
                 LOGGER.warning("Fehler: " + e.getMessage());
             }
             if (result != null) {
-                LOGGER.info(String.format("Rechnung: %s", result));
+                if (LOGGER.isLoggable(Level.INFO)) {
+                    LOGGER.info(String.format("Rechnung: %s", result));
+                }
             }
         }
         return true;
