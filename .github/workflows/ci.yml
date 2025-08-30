@@ -114,6 +114,13 @@ jobs:
     needs: Analysis
     runs-on: ubuntu-latest
     steps:
+      # Checkout codebase
+      - name: Checkout codebase
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
       # Download JAR
       - name: Download JAR
         uses: actions/download-artifact@v4
