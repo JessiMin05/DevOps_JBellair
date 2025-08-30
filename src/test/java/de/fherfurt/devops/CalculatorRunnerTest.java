@@ -57,8 +57,8 @@ class CalculatorRunnerTest {
         ArrayList<LogRecord> records = new ArrayList<>();
         Handler handler = new Handler() {
             @Override
-            public void publish(final LogRecord record) {
-                records.add(record);
+            public void publish(final LogRecord logRecord) {
+                records.add(logRecord);
             }
             @Override
             public void flush() {

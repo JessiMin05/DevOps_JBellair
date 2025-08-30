@@ -251,13 +251,12 @@ class CalculatorConsoleUITest {
                     >= Level.WARNING.intValue()
                     && r.getMessage()
                         .contains(
-                            "Fehler"
+                            "Division durch null ist nicht erlaubt!"
                         )
             );
             Assertions.assertTrue(
                 found,
-                "Logger sollte Warnung für Exception beim "
-                + "Berechnen enthalten"
+                "Logger sollte Warnung für Division durch null enthalten"
             );
         } finally {
             logger.removeHandler(handler);
