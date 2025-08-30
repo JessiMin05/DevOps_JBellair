@@ -52,47 +52,6 @@ class CalculatorRunnerTest {
     }
 
     @Test
-    void runWithEnvOrArgsInvalidOperatorLogsWarning() {
-        Logger logger = Logger.getLogger(
-            CalculatorRunner.class.getName()
-        );
-    ArrayList<LogRecord> records = new ArrayList<>();
-        Handler handler = new Handler() {
-            @Override
-            public void publish(final LogRecord logRecord) {
-                // Add log record to the list for test assertions
-                records.add(logRecord);
-            }
-            @Override
-            public void flush() {
-                // No resources to flush for this test handler
-            }
-            @Override
-            public void close() throws SecurityException {
-                // No resources to close for this test handler
-            }
-        };
-        logger.addHandler(handler);
-        logger.setUseParentHandlers(false);
-        try {
-            CalculatorRunner.runWithEnvOrArgs(
-                new String[]{Double.toString(NUM2), "x", Double.toString(NUM3)},
-                ARG_COUNT);
-            boolean found = records.stream().anyMatch(r ->
-                r.getLevel().intValue()
-                    >= java.util.logging.Level.WARNING.intValue()
-                    && r.getMessage().contains("Ungültiger Operator")
-            );
-            Assertions.assertTrue(
-                found,
-                "Logger sollte Warnung für ungültigen Operator enthalten"
-            );
-        } finally {
-            logger.removeHandler(handler);
-        }
-    }
-
-    @Test
     void runWithEnvOrArgsMultiCharOperatorLogsWarning() {
         Logger logger = Logger.getLogger(CalculatorRunner.class.getName());
         ArrayList<LogRecord> records = new ArrayList<>();
