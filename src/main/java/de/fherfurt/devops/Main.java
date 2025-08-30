@@ -20,8 +20,8 @@ public final class Main {
      * or interactive user input. The program continues to run
      * in a loop until the user types 'exit'.
      *
-     * @param args If three arguments are provided, 
-     *             they are used as first number, operator, and second number.
+    * @param args If three arguments are provided,
+    *             they are used as first number, operator, and second number.
      */
     public static void main(final String[] args) {
     Scanner scanner = new Scanner(System.in);
@@ -49,7 +49,8 @@ public final class Main {
 
         if (!envUsed
             && ((useArgs && argZahl1 != null && argZahl2 != null && argOp != null)
-            || (zahl1 != null && zahl2 != null && op != null))) {
+            || (zahl1 != null && zahl2 != null
+            && op != null))) {
                     String usedZahl1 = useArgs ? argZahl1 : zahl1;
                     String usedZahl2 = useArgs ? argZahl2 : zahl2;
                     String usedOp = useArgs ? argOp : op;
