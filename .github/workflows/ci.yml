@@ -65,6 +65,7 @@ jobs:
           path: target/classes/      
 
   Analysis:
+    needs: BuildWithTesting
     runs-on: ubuntu-latest
     steps:
       # Checkout codebase
@@ -110,6 +111,7 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=DevOps_JBellair -Dsonar.projectName='DevOps_JBellair'
 
   Docker:
+    needs: Analysis
     runs-on: ubuntu-latest
     steps:
       # Download JAR
@@ -130,6 +132,7 @@ jobs:
               -DskipTests
 
   CleanUp:
+    needs: Docker
     runs-on: ubuntu-latest
     steps:
       # Docker logout
