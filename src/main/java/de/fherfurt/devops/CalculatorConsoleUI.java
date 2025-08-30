@@ -65,16 +65,11 @@ public final class CalculatorConsoleUI {
         if (operator == '/' && num2 == 0.0) {
             LOGGER.warning("Division durch null ist nicht erlaubt!");
         } else {
-            String result = null;
-            try {
-                result = Calculator.calculateAndShow(
-                    num1,
-                    operator,
-                    num2
-                );
-            } catch (final Exception e) {
-                LOGGER.warning("Fehler: " + e.getMessage());
-            }
+            String result = Calculator.calculateAndShow(
+                num1,
+                operator,
+                num2
+            );
             if (result != null) {
                 if (LOGGER.isLoggable(Level.INFO)) {
                     LOGGER.info(String.format("Rechnung: %s", result));

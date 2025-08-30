@@ -278,4 +278,40 @@ class CalculatorConsoleUITest {
             new ByteArrayInputStream(input.getBytes()));
         Assertions.assertFalse(CalculatorConsoleUI.runInteractive(scanner));
     }
+    @Test
+    void runInteractiveLogsResultOnInfoLevel() {
+        Logger logger = Logger.getLogger(CalculatorConsoleUI.class.getName());
+        ArrayList<LogRecord> records = new ArrayList<>();
+        Handler handler = new Handler() {
+            @Override
+            public void publish(final LogRecord logRecord) {
+                records.add(logRecord);
+            }
+            @Override
+            public void flush() { }
+            @Override
+            public void close() throws SecurityException { }
+        };
+        logger.addHandler(handler);
+        logger.setUseParentHandlers(false);
+        String input = NUM2 + NL + PLUS + NL + NUM3 + NL + EXIT + NL;
+        try (
+            Scanner scanner = new Scanner(
+                new ByteArrayInputStream(input.getBytes())
+            )
+        ) {
+            CalculatorConsoleUI.runInteractive(scanner);
+            boolean found = records.stream().anyMatch(r ->
+                r.getLevel().intValue() == Level.INFO.intValue()
+                && r.getMessage() != null
+                && r.getMessage().contains("Rechnung: 2.0 + 3.0 = 5.0")
+            );
+            Assertions.assertTrue(
+                found,
+                "Logger sollte das Ergebnis der Rechnung auf INFO loggen"
+            );
+        } finally {
+            logger.removeHandler(handler);
+        }
+    }
 }
