@@ -168,6 +168,8 @@ jobs:
   CleanUp:
     needs: Docker
     runs-on: ubuntu-latest
+    permissions: 
+      actions: write
     steps:
       # Docker logout
       - name: Docker logout
@@ -176,7 +178,7 @@ jobs:
           docker logout
 
       # Remove Artifacts
-      - name: Remove JAR and compiled classes
+      - name: Remove Artifacts
         uses: geekyeggo/delete-artifact@v4
         with:
           name: |
