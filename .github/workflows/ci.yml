@@ -178,7 +178,11 @@ jobs:
 
       # Remove Artifacts
       - name: Remove JAR and compiled classes
-        run: |
-          echo "Removing JAR and compiled classes"
-          rm -f target/*.jar
-          rm -rf target/classes/
+        uses: geekyeggo/delete-artifact@v4
+        with:
+          name: |
+            test-results
+            app-jar
+            compiled-classes
+            maven-dependency
+        continue-on-error: true
