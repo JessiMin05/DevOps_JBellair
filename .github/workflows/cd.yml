@@ -61,7 +61,6 @@ jobs:
       - name: Pull latest Docker image
         run: |
           docker pull jessimin/devops:${{ needs.SetUp.outputs.latest_tag }}
-
           
       # Deploy Application
       - name: Deploy Application
@@ -75,17 +74,19 @@ jobs:
           sleep 5
           echo "==== Application Output ===="
           docker logs calculator
+          
+      # Stop Calculator Container
+      - name: Stop Calculator Container
+        run: |
+          docker stop calculator || true
+          docker rm calculator || true
+          docker rmi jessimin/devops:${{ needs.SetUp.outputs.latest_tag }} || true
+
 
   CleanUp:
     needs: [SetUp,Deployment]
     runs-on: ubuntu-latest
     steps:
-      - name: Stop Calculator Container
-        run: |
-          docker stop calculator
-          docker rm calculator
-          docker rmi jessimin/devops:${{ needs.SetUp.outputs.latest_tag }}
-
       # Docker logout
       - name: Docker logout
         run: |
